@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/main_background"
+    tools:context=".MainActivity">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/conversation"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/playerInput">
+
+    </android.support.v7.widget.RecyclerView>
+
+    <EditText
+        android:id="@+id/playerInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="8dp"
+        android:background="@drawable/bg_edit_text"
+        android:fontFamily="@font/montserrat"
+        android:hint="Hi"
+        android:padding="8dp"
+        android:inputType="text"
+        android:textSize="24sp"
+        android:textColor="#fff"
+        android:textColorHint="#fff"
+        android:imeActionId="4"
+        android:imeOptions="actionSend"
+        />
+
+</RelativeLayout>
