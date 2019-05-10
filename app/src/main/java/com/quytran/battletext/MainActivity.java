@@ -1,9 +1,12 @@
 package com.quytran.battletext;
 
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
@@ -18,6 +21,14 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     List<ResponseMessage> responseMessageList;
     MessageAdapter messageAdapter;
+    TextView playerPoints;
+
+    AsyncTask asyncTask;
+
+    //vars
+    String botWords;
+    String playerWords;
+    String lastCharacter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,16 +36,15 @@ public class MainActivity extends AppCompatActivity {
         //
         playerInput=findViewById(R.id.playerInput);
         recyclerView=findViewById(R.id.conversation);
-
+        playerPoints=findViewById(R.id.playerPoints);
+        //
         responseMessageList = new ArrayList<>();
         messageAdapter=new MessageAdapter(responseMessageList,this);
         //
-        //final LinearLayoutManager layoutManager = new LinearLayoutManager(recyclerView.getContext());
-        //layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        //layoutManager.setReverseLayout(false);
-        //recyclerView.setLayoutManager(layoutManager);
         recyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
         recyclerView.setAdapter(messageAdapter);
+
+        //
 
         playerInput.setOnEditorActionListener(new TextView.OnEditorActionListener()
         {
@@ -43,19 +53,30 @@ public class MainActivity extends AppCompatActivity {
             {
                 if(actionId == EditorInfo.IME_ACTION_SEND)
                 {
+                    //
+                    playerWords=playerInput.getText().toString();
+                    lastCharacter=playerWords.substring(playerWords.length()-1);
+                    //botWords=playerInput.getText().toString();
+                    botWords=lastCharacter;
+
+                    //
                     ResponseMessage playerMessage =
-                            new ResponseMessage(playerInput.getText().toString(),true);
+                            new ResponseMessage(playerWords,true);
                     responseMessageList.add(playerMessage);
                     ResponseMessage botMessage =
-                            new ResponseMessage(playerInput.getText().toString(),false);
+                            new ResponseMessage(botWords,false);
                     responseMessageList.add(botMessage);
                     messageAdapter.notifyDataSetChanged();
                     if (!isLastVisible())
                         recyclerView.smoothScrollToPosition(messageAdapter.getItemCount() - 1);
+                    asyncTask=new CalculatePointASyncTask(MainActivity.this);
+                    asyncTask.execute(new String[]{playerWords,botWords});
                 }
                 return false;
             }
         });
+
+
     }
     boolean isLastVisible() {
         LinearLayoutManager layoutManager = ((LinearLayoutManager) recyclerView.getLayoutManager());

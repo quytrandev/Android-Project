@@ -11,6 +11,7 @@
         android:id="@+id/conversation"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/playerPoints"
         android:layout_above="@+id/playerInput">
 
     </android.support.v7.widget.RecyclerView>
@@ -33,4 +34,28 @@
         android:imeOptions="actionSend"
         />
 
+    <TextView
+        android:id="@+id/playerPoints"
+        android:layout_width="108dp"
+        android:layout_height="53dp"
+        android:layout_alignParentEnd="true"
+        android:fontFamily="@font/montserrat"
+        android:text="0"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textColor="#fff"
+        android:textSize="40sp"
+        android:textStyle="bold" />
+    <TextView
+        android:id="@+id/botPoints"
+        android:layout_width="108dp"
+        android:layout_height="53dp"
+        android:layout_alignParentEnd="false"
+        android:fontFamily="@font/montserrat"
+        android:text="0"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textColor="#fff"
+        android:textSize="40sp"
+        android:textStyle="bold" />
 </RelativeLayout>
