@@ -12,6 +12,12 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         //
         recyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
         recyclerView.setAdapter(messageAdapter);
-
+        parseJson();
         //
 
         playerInput.setOnEditorActionListener(new TextView.OnEditorActionListener()
@@ -77,6 +83,46 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    private class ReadJSONObject extends AsyncTask<String,Void,String> {
+
+
+        @Override
+        protected String doInBackground(String... strings) {
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+        }
+
+
+    }
+    public void parseJson(){
+        String json;
+        //int jsonLength=json.length();
+        try
+        {
+            InputStream inputStream=getAssets().open("words1.json");
+
+            int size =inputStream.available();
+            byte[] buffer=new byte[size];
+            inputStream.read(buffer);
+            inputStream.close();
+
+            json = new String(buffer,"UTF-8");
+
+            //JSONArray jsonArray=new JSONArray(json);
+            JSONObject jsonObject= new JSONObject(json);
+            String test=jsonObject.keys().toString();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
     boolean isLastVisible() {
         LinearLayoutManager layoutManager = ((LinearLayoutManager) recyclerView.getLayoutManager());
