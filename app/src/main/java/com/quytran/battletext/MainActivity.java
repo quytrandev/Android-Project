@@ -11,6 +11,7 @@ import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,11 +31,13 @@ public class MainActivity extends AppCompatActivity {
     TextView playerPoints;
 
     AsyncTask asyncTask;
+    JSONObject jsonObject;
 
     //vars
     String botWords;
     String playerWords;
     String lastCharacter;
+    boolean isWordValid;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,13 +54,33 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(messageAdapter);
         parseJson();
         //
+        playerInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(jsonObject.has(playerInput.getText().toString())){
+                    isWordValid=true;
+                }
+                else {
+                    isWordValid=false;
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
         playerInput.setOnEditorActionListener(new TextView.OnEditorActionListener()
         {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
             {
-                if(actionId == EditorInfo.IME_ACTION_SEND)
+                if(actionId == EditorInfo.IME_ACTION_SEND && isWordValid==true)
                 {
                     //
                     playerWords=playerInput.getText().toString();
@@ -66,17 +89,29 @@ public class MainActivity extends AppCompatActivity {
                     botWords=lastCharacter;
 
                     //
-                    ResponseMessage playerMessage =
-                            new ResponseMessage(playerWords,true);
-                    responseMessageList.add(playerMessage);
+                    if(jsonObject.has(playerWords)) {
+                        ResponseMessage playerMessage =
+                                new ResponseMessage(playerWords, true);
+                        responseMessageList.add(playerMessage);
+                        jsonObject.remove(playerWords);
+                    }
+                    else {
+
+                    }
+
                     ResponseMessage botMessage =
                             new ResponseMessage(botWords,false);
                     responseMessageList.add(botMessage);
                     messageAdapter.notifyDataSetChanged();
                     if (!isLastVisible())
                         recyclerView.smoothScrollToPosition(messageAdapter.getItemCount() - 1);
+
                     asyncTask=new CalculatePointASyncTask(MainActivity.this);
                     asyncTask.execute(new String[]{playerWords,botWords});
+                }
+                else{
+                    Toast.makeText(getApplicationContext(), "Your word is incorect, try again u dumb shit", Toast.LENGTH_SHORT).show();
+
                 }
                 return false;
             }
@@ -105,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
         //int jsonLength=json.length();
         try
         {
-            InputStream inputStream=getAssets().open("words1.json");
+            InputStream inputStream=getAssets().open("words.json");
 
             int size =inputStream.available();
             byte[] buffer=new byte[size];
@@ -115,8 +150,8 @@ public class MainActivity extends AppCompatActivity {
             json = new String(buffer,"UTF-8");
 
             //JSONArray jsonArray=new JSONArray(json);
-            JSONObject jsonObject= new JSONObject(json);
-            String test=jsonObject.keys().toString();
+             jsonObject= new JSONObject(json);
+            //String test=jsonObject.keys().toString();
         }
         catch (IOException e) {
             e.printStackTrace();
