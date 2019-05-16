@@ -52,6 +52,13 @@ public class IMTester {
             //String json = new String(Files.readAllBytes(Paths.get("path/to/json.txt")));
             myObj = new JSONObject(json);
 
+            if(myObj==null){
+                System.out.println("\nYour obj is null");
+            }
+            else{
+                System.out.println("\nYour obj is not null");
+
+            }
             Iterator keysIterator = myObj.keys();
             List<String> keysList = new ArrayList<String>();
             while(keysIterator.hasNext()) {
@@ -99,10 +106,10 @@ public class IMTester {
     public static void main(String[] args) {
         //Insert the needed filename here; to be sure it works, write the whole path with double backslashes (because escape characters)
         //If you place it inside your src folder (ex: if you just drag the file onto your a3posted package), this link should work
-        String filename = "G:/words1.json";
+        String filename = "D:/words1.json";
         IMTester test = new IMTester(filename);
 
-        test.testPrefix();
+        //test.testPrefix();
     }
 
 }
