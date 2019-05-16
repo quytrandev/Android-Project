@@ -79,9 +79,8 @@ public class IMTester {
 //        for(int i = 0; i<mainList.length; i++) mainList[i] = sc.nextLine();
 
         //Then, get the getPrefix check split up
-        prefixCheck = new String[mainList.length][2];
-        for(int i = 0; i<prefixCheck.length; i++) prefixCheck[i] = mainList[i].split(" ");
-
+//        prefixCheck = new String[mainList.length][2];
+//        for(int i = 0; i<prefixCheck.length; i++) prefixCheck[i] = mainList[i].split(" ");
 
     }
 

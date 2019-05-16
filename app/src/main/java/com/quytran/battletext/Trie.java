@@ -58,10 +58,18 @@ public class Trie
 
     public void loadKeys(ArrayList<String> keys)
     {
-        for (int i = 0; i < keys.size(); i++)
+        int size=keys.size();
+        for (int i = 0; i <size ; i++)
         {
-            insert(keys.get(i));
+            String key = keys.get(i);
+            if(key.length()<2){
+
+            }
+            else{
+                insert(key);
+            }
         }
+
         return;
     }
 
@@ -163,6 +171,7 @@ public class Trie
         }
         // fill the list using the helper method found below
         stringList.addAll(recursivePrefix(cur));
+
 
         //  ADD YOUR CODE ABOVE HERE
 

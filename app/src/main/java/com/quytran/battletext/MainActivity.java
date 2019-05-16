@@ -42,7 +42,6 @@ public class MainActivity extends AppCompatActivity {
     String playerWords;
     String lastCharacter;
     boolean isWordValid;
-    String filename = "D:/words1.json";
     IMTester test;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(messageAdapter);
         parseJson();
         test = new IMTester();
-
         //
         playerInput.addTextChangedListener(new TextWatcher() {
             @Override
@@ -94,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
                     playerWords=playerInput.getText().toString();
                     lastCharacter=playerWords.substring(playerWords.length()-1);
                     //botWords=playerInput.getText().toString();
-                    botWords=lastCharacter;
+                   // botWords=lastCharacter;
 
                     //
                     if(jsonObject.has(playerWords)) {
@@ -106,10 +104,11 @@ public class MainActivity extends AppCompatActivity {
                     else {
 
                     }
-
+                    test.getBotWord();
                     ResponseMessage botMessage =
                             new ResponseMessage(botWords,false);
                     responseMessageList.add(botMessage);
+                    jsonObject.remove(botWords);
                     messageAdapter.notifyDataSetChanged();
                     if (!isLastVisible())
                         recyclerView.smoothScrollToPosition(messageAdapter.getItemCount() - 1);
@@ -118,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
                     asyncTask.execute(new String[]{playerWords,botWords});
                 }
                 else{
-                    Toast.makeText(getApplicationContext(), "Your word is incorect, try again u dumb shit", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Your word is incorect, try again", Toast.LENGTH_SHORT).show();
 
                 }
                 return false;
@@ -148,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
         //int jsonLength=json.length();
         try
         {
-            InputStream inputStream=getAssets().open("words1.json");
+            InputStream inputStream=getAssets().open("english.json");
 
             int size =inputStream.available();
             byte[] buffer=new byte[size];
@@ -169,37 +168,27 @@ public class MainActivity extends AppCompatActivity {
     }
     private class IMTester {
         String[] mainList;
-        String[][] containsCheck, prefixCheck, matchesCheck;
         Trie trie;
+        ArrayList<String> botWordsList;
         //The constructor loads the file and initializes the trie
         public IMTester() {
             loadInfo();
 
             trie = new Trie();
-            trie.loadKeys(new java.util.ArrayList<String>(Arrays.asList(mainList)));
-            System.out.println("The trie should now contain " + mainList.length + " words.");
-        }
+            botWordsList = new ArrayList<String>(Arrays.asList(mainList));
+            trie.loadKeys(botWordsList);
+            //ArrayList<String> list =trie.getAllPrefixMatches("c");
 
+        }
+        public void getBotWord() {
+            botWords = trie.getAllPrefixMatches(lastCharacter).get(0);
+            botWordsList.remove(botWords);
+            trie = new Trie();
+            trie.loadKeys(botWordsList);
+        }
         //Loading initializes and assigns values to all 4 arrays
         private void loadInfo() {
-//        Scanner sc = null;
-//        try {
-//            sc = new Scanner(new File(filename));
-//        } catch(FileNotFoundException e) {
-//            System.out.println(e.getMessage());
-//            System.exit(1);
-//        }
-            //Start by getting the Trie list
-            try {
-
-
-                if(jsonObject==null){
-                    System.out.println("\nYour obj is null");
-                }
-                else{
-                    System.out.println("\nYour obj is not null");
-
-                }
+            try{
                 Iterator keysIterator = jsonObject.keys();
                 List<String> keysList = new ArrayList<String>();
                 while(keysIterator.hasNext()) {
@@ -207,40 +196,9 @@ public class MainActivity extends AppCompatActivity {
                     keysList.add(key);
                 }
                 mainList = keysList.toArray(new String[0]);   //mainList
-
             }
             catch (Exception ex){}
-
-//        mainList = new String[Integer.parseInt(sc.nextLine())];
-//        for(int i = 0; i<mainList.length; i++) mainList[i] = sc.nextLine();
-
-            //Then, get the getPrefix check split up
-            prefixCheck = new String[mainList.length][2];
-            for(int i = 0; i<prefixCheck.length; i++) prefixCheck[i] = mainList[i].split(" ");
-
-
         }
-
-
-
-        public void testPrefix() {
-            System.out.println("\nTime to test the getPrefix() method! The correct answer is shown in parentheses. ");
-            for(String[] row : prefixCheck)
-                System.out.printf("The longest prefix of '%s' = %s (%s)%n", row[0], this.trie.getPrefix(row[0]), (row.length == 1 ? "" : row[1]));
-        }
-
-
-
-        //For the testMatches block, need to print row[1:]
-        private String matchesList(String[] row) {
-            String result = "";
-            for(int i=1; i<row.length-1; i++) result+=row[i] + ", ";
-            if(row.length>1) result+=row[row.length-1];
-            return result;
-        }
-
-
-
     }
     boolean isLastVisible() {
         LinearLayoutManager layoutManager = ((LinearLayoutManager) recyclerView.getLayoutManager());
