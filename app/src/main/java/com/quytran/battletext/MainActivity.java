@@ -1,13 +1,16 @@
 package com.quytran.battletext;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.Selection;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -51,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
         playerInput=findViewById(R.id.playerInput);
         recyclerView=findViewById(R.id.conversation);
         playerPoints=findViewById(R.id.playerPoints);
+
         //khởi tạo ResponseMessage list và Message Adapter
         responseMessageList = new ArrayList<>();
         //truyền message list cho MessageAdapter để tự động điều phối tin nhắn
@@ -61,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
         parseJson();        //load dữ liệu từ json file
         botResponse = new BotResponse();        //khởi tạo class BotResponse
         //sự kiện text change cho edit text
+
         playerInput.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -75,6 +80,18 @@ public class MainActivity extends AppCompatActivity {
                 else {
                     isWordValid=false;      //không tồn tại
                 }
+                try{
+                    if(playerInput.getText().toString().length()<1){
+                    playerInput.append(lastCharacter);
+                }
+                }
+                catch (Exception ex)
+                {
+
+                }
+
+
+
             }
 
             @Override
@@ -89,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
             {
                 //check xem sự kiện có phải là 'SEND' và từ player nhập vào có đúng hay không
-                if(actionId == EditorInfo.IME_ACTION_SEND && isWordValid==true)
+                if(actionId == EditorInfo.IME_ACTION_SEND && isWordValid==true )
                 {
                     //
                     playerWords=playerInput.getText().toString();   //lấy từ của player
@@ -116,30 +133,46 @@ public class MainActivity extends AppCompatActivity {
                     ResponseMessage botMessage =
                             new ResponseMessage(botWords,false);
                     responseMessageList.add(botMessage); //thêm message vào list
+                    lastCharacter= botWords.substring(botWords.length()-1);
                     //sau khi thêm xong sẽ remove từ đó khỏi danh sách từ
                     //tránh việc từ được sử dụng 2 lần
                     jsonObject.remove(botWords);
                     //thông báo đến messageAdapter dữ liệu được thay đổi
                     messageAdapter.notifyDataSetChanged();
-                    if (!isLastVisible())
+
+                    if (!isLastVisible()) {
                         //scroll tới tin nhắn gần nhất
                         recyclerView.smoothScrollToPosition(messageAdapter.getItemCount() - 1);
+                    }
 
                     //gọi async task để tính điểm cho player & bot
                     asyncTask=new CalculatePointASyncTask(MainActivity.this);
                     //truyền 2 giá trị là playerWords và botWords đến async task để đo số ký tự và tính điểm
                     asyncTask.execute(new String[]{playerWords,botWords});
+
                     playerInput.setText("");
+//                    playerInput.append(lastCharacter);
                 }
                 else{
 
                 }
+
                 return false;
             }
         });
 
 
     }
+
+//    public void reloadMain(View view) {
+//asyncTask=new CalculatePointASyncTask(MainActivity.this);
+//        Intent intent = getIntent();
+//        finish();
+//        startActivity(intent);
+//
+//
+//    }
+
 
     private class ReadJSONObject extends AsyncTask<String,Void,String> {
 

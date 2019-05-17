@@ -13,12 +13,14 @@ import android.widget.TextView;
 import java.util.List;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.CustomViewHolder> {
-
+    TextView plusPoints;
     class CustomViewHolder extends RecyclerView.ViewHolder{
         TextView textView;
         public CustomViewHolder(View itemView) {
             super(itemView);
             textView=itemView.findViewById(R.id.txtMsg);
+             plusPoints=itemView.findViewById((R.id.plusPoints));
+
         }
     }
     List<ResponseMessage> responseMessageList;          //khoi tao List voi model la ResponseMessage
@@ -49,7 +51,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.CustomVi
     @Override
     public void onBindViewHolder(MessageAdapter.CustomViewHolder holder, int position) {
     //set message vào đúng vị trị tùy vào position (bot hoặc player)
-        holder.textView.setText(responseMessageList.get(position).getMessage());
+        String message=responseMessageList.get(position).getMessage();
+        holder.textView.setText(message);
+        int point=responseMessageList.get(position).getMessage().length();
+        plusPoints.setText("+"+String.valueOf(point));
+
 }
 
     @Override
