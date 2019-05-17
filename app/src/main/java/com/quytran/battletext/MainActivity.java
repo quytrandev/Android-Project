@@ -129,6 +129,7 @@ public class MainActivity extends AppCompatActivity {
                     asyncTask=new CalculatePointASyncTask(MainActivity.this);
                     //truyền 2 giá trị là playerWords và botWords đến async task để đo số ký tự và tính điểm
                     asyncTask.execute(new String[]{playerWords,botWords});
+                    playerInput.setText("");
                 }
                 else{
 

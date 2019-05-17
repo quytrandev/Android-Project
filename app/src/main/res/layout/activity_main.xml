@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/main_background"
+    android:background="@color/colorAccent"
     tools:context=".MainActivity">
 
     <android.support.v7.widget.RecyclerView
@@ -22,13 +22,13 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_margin="8dp"
-        android:background="@drawable/bg_edit_text"
+        android:background="#fff"
         android:fontFamily="@font/montserrat"
-        android:hint="Hi"
+        android:hint=""
         android:padding="8dp"
         android:inputType="text"
         android:textSize="24sp"
-        android:textColor="#fff"
+        android:textColor="#000"
         android:textColorHint="#fff"
         android:imeActionId="4"
         android:imeOptions="actionSend"

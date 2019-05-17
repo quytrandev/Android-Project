@@ -52,6 +52,6 @@ public class CalculatePointASyncTask extends AsyncTask<String, Integer, Void> {
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
 
-        Toast.makeText(contextParent, "Okie, Finished", Toast.LENGTH_SHORT).show();
+        Toast.makeText(contextParent, "Finished calculating", Toast.LENGTH_SHORT).show();
     }
 }
