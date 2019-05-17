@@ -19,33 +19,30 @@ public class CalculatePointASyncTask extends AsyncTask<String, Integer, Void> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        //Hàm này sẽ chạy đầu tiên khi AsyncTask này được gọi
-        //Ở đây mình sẽ thông báo quá trình load bắt đâu "Start"
-
         Toast.makeText(contextParent, "Start", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     protected Void doInBackground(String... params) {
-        int playerMessageLength =params[0].length();
+        int playerMessageLength =params[0].length();    //lấy giá trị được truyền từ MainActivity sang
         int botMessageLength =params[1].length();
 
-        pPoints=pPoints+playerMessageLength;
+        pPoints=pPoints+playerMessageLength;            //cộng dồn điểm cho player và bot
         bPoints=bPoints+botMessageLength;
 
-        publishProgress(pPoints,bPoints);
+        publishProgress(pPoints,bPoints);               //truyền giá trị xuống onProgressUpdate sau khi xử lý
         return null;
     }
 
     @Override
     protected void onProgressUpdate(Integer... values) {
         super.onProgressUpdate(values);
-        int playerPoints = values[0];
+        int playerPoints = values[0];       //lấy giá trị từ doInBackground và gán cho playerPoints,botPoints
         int botPoints = values[1];
 
         TextView textViewPlayerPoints = (TextView) contextParent.findViewById(R.id.playerPoints);
         TextView textViewBotPoints = (TextView) contextParent.findViewById(R.id.botPoints);
-        //Set points
+        //Set points cho 2 textviews
         textViewPlayerPoints.setText(String.valueOf(playerPoints));
         textViewBotPoints.setText(String.valueOf(botPoints));
 
@@ -54,8 +51,7 @@ public class CalculatePointASyncTask extends AsyncTask<String, Integer, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        //Hàm này được thực hiện khi tiến trình kết thúc
-        //Ở đây mình thông báo là đã "Finshed" để người dùng biết
+
         Toast.makeText(contextParent, "Okie, Finished", Toast.LENGTH_SHORT).show();
     }
 }

@@ -3,7 +3,7 @@ package com.quytran.battletext;
 public class ResponseMessage {
     //vars
     String message;
-    boolean isPlayer;
+    boolean isPlayer;           //check xem nguoi gui message la player hay bot
 
     //Constructor
     public ResponseMessage(String message, boolean isPlayer) {

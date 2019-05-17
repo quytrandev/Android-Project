@@ -1,5 +1,10 @@
 package com.quytran.battletext;
 
+
+/*Code về Prefix Tree (Trie) thuộc quyền sở hữu của msukkari
+ được tham khảo tại https://github.com/msukkari/Autocomplete
+*/
+
 import java.util.*;
 
 /*
@@ -56,6 +61,8 @@ public class Trie
 
     // insert each key in the list (keys)
 
+    //load danh sách các key vào Trie (prefix tree)
+    //ở đây ta sẽ load các từ (words) vào Trie
     public void loadKeys(ArrayList<String> keys)
     {
         int size=keys.size();
@@ -142,6 +149,9 @@ public class Trie
     /*
      *  Return a list of all keys in the trie that have the given prefix.
      */
+
+    //search các từ bắt đầu bằng giá trị 'prefix' được truyền vào và trả ra một Array list
+    // VD: prefix = "th" => stringList =[than, their, the, think,...]
     public ArrayList<String> getAllPrefixMatches( String prefix )
     {
         //  ADD YOUR CODE BELOW
