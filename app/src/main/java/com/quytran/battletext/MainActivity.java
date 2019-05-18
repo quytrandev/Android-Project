@@ -28,7 +28,6 @@ public class MainActivity extends AppCompatActivity {
 
     EditText playerInput;
     RecyclerView recyclerView;
-    TextView playerPoints;
     MessageAdapter messageAdapter;          //khai báo class MessageAdapter
     List<ResponseMessage> responseMessageList;          //khai báo danh sách
     AsyncTask asyncTask;        //khai báo Async Task để thực hiện việc tính điểm
@@ -49,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
         //lấy id
         playerInput=findViewById(R.id.playerInput);
         recyclerView=findViewById(R.id.conversation);
-        playerPoints=findViewById(R.id.playerPoints);
 
         //khởi tạo ResponseMessage list và Message Adapter
         responseMessageList = new ArrayList<>();
@@ -114,19 +112,15 @@ public class MainActivity extends AppCompatActivity {
                     lastCharacter=playerWords.substring(playerWords.length()-1);
 
                     //
-                    if(jsonObject.has(playerWords)) {
-                        //khởi tạo model và truyền giá trị cho model đó
-                        ResponseMessage playerMessage =
-                                new ResponseMessage(playerWords, true);
+                    //khởi tạo model và truyền giá trị cho model đó
+                    ResponseMessage playerMessage =
+                            new ResponseMessage(playerWords, true);
 
-                        responseMessageList.add(playerMessage); //thêm message vào list
-                        //sau khi thêm xong sẽ remove từ đó khỏi danh sách từ
-                        //tránh việc từ được sử dụng 2 lần
-                        jsonObject.remove(playerWords);
-                    }
-                    else {
-                        Toast.makeText(getApplicationContext(), "Your word is incorect, try again", Toast.LENGTH_SHORT).show();
-                    }
+                    responseMessageList.add(playerMessage); //thêm message vào list
+                    //sau khi thêm xong sẽ remove từ đó khỏi danh sách từ
+                    //tránh việc từ được sử dụng 2 lần
+                    jsonObject.remove(playerWords);
+
                     botResponse.getBotWord();           //lấy từ được trả về từ class BotResponse
                     //khởi tạo model và truyền giá trị cho model đó
                     ResponseMessage botMessage =

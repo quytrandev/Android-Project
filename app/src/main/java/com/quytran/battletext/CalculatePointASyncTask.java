@@ -32,7 +32,7 @@ public class CalculatePointASyncTask extends AsyncTask<String, Integer, Void> {
        pPoints=pPoints+playerMessageLength;            //cộng dồn điểm cho player và bot
        bPoints=bPoints+botMessageLength;
 
-       publishProgress(pPoints,bPoints,playerMessageLength,botMessageLength);               //truyền giá trị xuống onProgressUpdate sau khi xử lý
+       publishProgress(pPoints,bPoints);               //truyền giá trị xuống onProgressUpdate sau khi xử lý
 
         return null;
     }
@@ -42,8 +42,7 @@ public class CalculatePointASyncTask extends AsyncTask<String, Integer, Void> {
         super.onProgressUpdate(values);
         int playerPoints = values[0];       //lấy giá trị từ doInBackground và gán cho playerPoints,botPoints
         int botPoints = values[1];
-        int playerMessageLength=values[2];
-        int botMessageLength=values[3];
+
 
         //
         TextView textViewPlayerPoints = (TextView) contextParent.findViewById(R.id.playerPoints);
