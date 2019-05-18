@@ -1,29 +1,24 @@
 package com.quytran.battletext;
 
-import android.content.Intent;
+
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
-import android.text.Selection;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
-import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -34,7 +29,6 @@ public class MainActivity extends AppCompatActivity {
     EditText playerInput;
     RecyclerView recyclerView;
     TextView playerPoints;
-
     MessageAdapter messageAdapter;          //khai báo class MessageAdapter
     List<ResponseMessage> responseMessageList;          //khai báo danh sách
     AsyncTask asyncTask;        //khai báo Async Task để thực hiện việc tính điểm
@@ -46,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
     String lastCharacter;       //lấy ký tự cuối
     boolean isWordValid;        //check xem từ có tồn tại
     BotResponse botResponse;    //class thực hiện việc lấy từ dành cho bot
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,14 +70,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 //check trong json object để xem từ có tồn tại hay không
-                if(jsonObject.has(playerInput.getText().toString())){
+                String word=playerInput.getText().toString();
+                if(jsonObject.has(word)){
                     isWordValid=true;       //từ tồn tại
                 }
                 else {
                     isWordValid=false;      //không tồn tại
                 }
                 try{
-                    if(playerInput.getText().toString().length()<1){
+                    //thêm chữ cuối của bot để người chơi phải bắt đầu bằng chữ đó
+                    //VD: example => player phải nhập từ bắt đầu = chữ 'e'
+                    if(word.length()<1){
                     playerInput.append(lastCharacter);
                 }
                 }
@@ -139,55 +138,20 @@ public class MainActivity extends AppCompatActivity {
                     jsonObject.remove(botWords);
                     //thông báo đến messageAdapter dữ liệu được thay đổi
                     messageAdapter.notifyDataSetChanged();
-
                     if (!isLastVisible()) {
                         //scroll tới tin nhắn gần nhất
                         recyclerView.smoothScrollToPosition(messageAdapter.getItemCount() - 1);
                     }
-
                     //gọi async task để tính điểm cho player & bot
                     asyncTask=new CalculatePointASyncTask(MainActivity.this);
                     //truyền 2 giá trị là playerWords và botWords đến async task để đo số ký tự và tính điểm
                     asyncTask.execute(new String[]{playerWords,botWords});
-
                     playerInput.setText("");
-//                    playerInput.append(lastCharacter);
                 }
-                else{
-
-                }
-
+                else {}
                 return false;
             }
         });
-
-
-    }
-
-//    public void reloadMain(View view) {
-//asyncTask=new CalculatePointASyncTask(MainActivity.this);
-//        Intent intent = getIntent();
-//        finish();
-//        startActivity(intent);
-//
-//
-//    }
-
-
-    private class ReadJSONObject extends AsyncTask<String,Void,String> {
-
-
-        @Override
-        protected String doInBackground(String... strings) {
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-        }
-
-
     }
     public void parseJson(){
         String json;        //chuỗi json
@@ -261,5 +225,6 @@ public class MainActivity extends AppCompatActivity {
         int pos = layoutManager.findLastCompletelyVisibleItemPosition();
         int numItems = recyclerView.getAdapter().getItemCount();
         return (pos >= numItems);
+
     }
 }

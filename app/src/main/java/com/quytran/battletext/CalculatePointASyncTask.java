@@ -1,16 +1,17 @@
 package com.quytran.battletext;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class CalculatePointASyncTask extends AsyncTask<String, Integer, Void> {
 
     Activity contextParent;
     static int pPoints=0;         //player points
     static int bPoints=0;         //bot points
+
     public CalculatePointASyncTask(Activity contextParent) {
         this.contextParent = contextParent;
 
@@ -50,9 +51,33 @@ public class CalculatePointASyncTask extends AsyncTask<String, Integer, Void> {
         //Set points cho 2 textviews
         textViewPlayerPoints.setText(String.valueOf(playerPoints));
         textViewBotPoints.setText(String.valueOf(botPoints));
-        //Show điểm cộng cho mỗi message
 
+        AlertDialog alertDialog = new AlertDialog.Builder(contextParent).create();
 
+        if(playerPoints>=30){
+            alertDialog.setTitle("Congratulations");
+            alertDialog.setMessage("YOU WON!");
+            alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+
+                }
+                });
+                 // Set the Icon for the Dialog
+                alertDialog.setIcon(R.drawable.battletext_icon1);
+                alertDialog.show();
+        }
+        if(botPoints>=30){
+            alertDialog.setTitle("Oh no...");
+            alertDialog.setMessage("YOU LOST!");
+            alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+
+                }
+            });
+            // Set the Icon for the Dialog
+            alertDialog.setIcon(R.drawable.battletext_icon1);
+            alertDialog.show();
+        }
 
     }
 
